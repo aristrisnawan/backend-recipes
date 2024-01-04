@@ -8,8 +8,14 @@ router.post("/signup", async (req, res) => {
   try {
     const { username, password, fullName } = req.body;
     const user = new User({ username, fullName, password });
+    //check username already exits
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ code: 400, message: "Username already exists" });
+    }
     const data = await user.save();
-    console.log('hai',existingUsername);
     res
       .status(201)
       .json({ data: data, message: "User registered successfully" });
