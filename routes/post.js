@@ -18,20 +18,30 @@ const upload = multer({ storage: storage });
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { filename, path, size } = req.file;
-    const {title, description} = req.body
-    const post = new Post({ filename, path, size,title, description });
+    const { title, description, steps } = req.body;
+    const post = new Post({ filename, path, size, title, description, steps });
     console.log(filename, path, size);
-    if(size > 9000){
-        return res.status(400).json({message: 'Size file too big'})
+    if (size > 972546) {
+      return res.status(400).json({ message: "Size file too big" });
     }
     await post.save();
     res.status(201).json({
       message: "File Upload success",
-      file: { filename, size, path, title, description },
+      file: { filename, size, path, title, description, steps },
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Show all data
+router.get("/recipes", async (req, res) => {
+  try {
+    const data = await Post.find();
+    res.status(200).json({ message: "Success show data", data });
+  } catch (error) {
+    res.status(500).json({ message: "Internet server error" });
   }
 });
 
