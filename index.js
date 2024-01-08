@@ -2,6 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const express = require('express');
 const AuthUser = require('./routes/auth')
+const PostRecipes = require('./routes/post')
 const mongoString = process.env.DATABASE_URL;
 const app = express();
 
@@ -17,6 +18,7 @@ database.once('connected', () => {
 
 app.use(express.json())
 app.use('/auth',AuthUser)
+app.use('/api', PostRecipes)
 
 app.listen(3000,() => {
     console.log(`Server started at localhost://3000`);
