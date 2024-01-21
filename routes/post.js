@@ -11,16 +11,25 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
   },
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    
+    if (mimetype && extname) return cb(null, true);
+    else cb("Error: Images Only!");
+}
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+});
 
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { filename, path, size } = req.file;
     const { title, description, steps } = req.body;
     const post = new Post({ filename, path, size, title, description, steps });
-    console.log(filename, path, size);
     if (size > 972546) {
       return res.status(400).json({ message: "Size file too big" });
     }

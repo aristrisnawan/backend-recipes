@@ -19,6 +19,8 @@ database.once('connected', () => {
 app.use(express.json())
 app.use('/auth',AuthUser)
 app.use('/api', PostRecipes)
+// Middleware for static image
+app.use('/uploads', express.static('uploads'));
 
 app.listen(3000,() => {
     console.log(`Server started at localhost://3000`);
