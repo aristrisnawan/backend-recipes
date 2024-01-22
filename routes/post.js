@@ -13,12 +13,14 @@ const storage = multer.diskStorage({
   },
   fileFilter: (req, file, cb) => {
     const filetypes = /jpeg|jpg|png|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
     const mimetype = filetypes.test(file.mimetype);
-    
+
     if (mimetype && extname) return cb(null, true);
     else cb("Error: Images Only!");
-}
+  },
 });
 
 const upload = multer({
@@ -44,11 +46,21 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-// Show all data
+// Get all data
 router.get("/recipes", async (req, res) => {
   try {
     const data = await Post.find();
-    res.status(200).json({ message: "Success show data", data });
+    res.status(200).json({ message: "Success get data", data });
+  } catch (error) {
+    res.status(500).json({ message: "Internet server error" });
+  }
+});
+
+// Get Detail
+router.get("/recipes/:id", async (req, res) => {
+  try {
+    const data = await Post.findById(req.params.id);
+    res.status(200).json({ message: "Success get detail", data });
   } catch (error) {
     res.status(500).json({ message: "Internet server error" });
   }
