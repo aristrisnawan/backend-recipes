@@ -5,6 +5,8 @@ const AuthUser = require('./routes/auth')
 const PostRecipes = require('./routes/post')
 const mongoString = process.env.DATABASE_URL;
 const app = express();
+var cors = require('cors');
+app.use(cors());
 
 mongoose.connect(mongoString, { useNewUrlParser: true, useUnifiedTopology: true })
 const database = mongoose.connection
